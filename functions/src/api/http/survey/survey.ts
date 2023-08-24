@@ -13,7 +13,7 @@ app.use(cors({ origin: true, credentials: true }))
 
 app.get('/:surveyId', getSurvey)
 app.post('/', auth, createSurvey)
-app.put('/', auth, updateSurvey)
+app.put('/:surveyId', auth, updateSurvey)
 app.delete('/:surveyId', auth, deleteSurvey)
 
 export default functions.https.onRequest(app)

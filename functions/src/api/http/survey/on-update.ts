@@ -5,9 +5,11 @@ import { AuthRequest } from '../../../types/express'
 import { setQuestionsId } from '../../../utils/survey'
 
 export const updateSurvey = (req: AuthRequest, res: Response) => {
+  const { surveyId } = req.params
   const survey: any = {
     ...req.body,
     updatedAt: new Date().toISOString(),
+    id: surveyId,
   }
 
   if (req.body.setup.method === 'Quadratic') {
