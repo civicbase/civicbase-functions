@@ -41,7 +41,17 @@ const resultsCSVFn = (req: Request, res: Response) => {
                 })
               })
 
-              const fields = getFields(surveyData, answerData)
+              let fields = []
+
+              if (surveyData.setup.method === 'Likert') {
+                fields = getFields.likert(surveyData, answerData)
+              } else if (surveyData.setup.method === 'Quadratic') {
+                fields = getFields.quadratic(surveyData, answerData)
+              } else {
+                return res.status(500).json({ message: 'This method is not supported' })
+              }
+
+              // const fields = getFields(surveyData, answerData)
 
               const csv = new json2csv.Parser({ fields })
 
@@ -56,7 +66,7 @@ const resultsCSVFn = (req: Request, res: Response) => {
 
               res.attachment(`${surveyData.setup.topic}-${mode}.csv`)
               res.set('Content-Type', 'text/csv')
-              res.status(200).send(answerCSV)
+              return res.status(200).send(answerCSV)
             })
             .catch((error) => {
               functions.logger.error(`Survey [${surveyId}] analytics`, error)

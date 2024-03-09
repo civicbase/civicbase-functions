@@ -1,13 +1,13 @@
 export function getResults(survey: any, answers: any) {
   switch (survey.setup.method) {
     case 'Quadratic':
-      return calculateQuadratic(answers as any)
+      return calculateQuadratic(answers)
 
     case 'Conjoint':
       return calculateConjoint()
 
     case 'Likert':
-      return calculateLikert(survey, answers as any)
+      return calculateLikert(answers)
   }
 }
 
@@ -15,28 +15,28 @@ const calculateConjoint = () => {
   return []
 }
 
-const calculateLikert = (survey: any, answers: any) => {
-  const resultMatrix = survey.likert?.map((question: any) => {
-    const matrix: number[][] = []
-
-    question.items.forEach(() => {
-      matrix.push([0, 0, 0, 0, 0])
-    })
-
-    return matrix
-  })
-
-  if (resultMatrix) {
-    answers.forEach((answer: any) => {
-      answer.questions.forEach((question: any, questionIndex: any) => {
-        question.item.forEach((item: any, itemIndex: any) => {
-          resultMatrix[questionIndex][itemIndex][item.vote - 1]++
-        })
+const calculateLikert = (answers: any) => {
+  return answers.reduce(
+    (results: any, answer: any) => {
+      answer.questions.forEach((question: any, index) => {
+        results[answer.status] = {
+          ...results[answer.status],
+          [`L${index + 1}`]: results[answer.status][`L${index + 1}`]
+            ? results[answer.status][`L${index + 1}`] + question.vote
+            : question.vote,
+        }
       })
-    })
-  }
-
-  return resultMatrix || []
+      return results
+    },
+    {
+      pilot: {
+        totalRespondents: 0,
+      },
+      published: {
+        totalRespondents: 0,
+      },
+    },
+  )
 }
 
 const calculateQuadratic = (answers: any) => {

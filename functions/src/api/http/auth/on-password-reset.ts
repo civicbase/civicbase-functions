@@ -10,8 +10,12 @@ const resetPasswordFn = (req: Request, res: Response) => {
   sendPasswordResetEmail(auth, email)
     .then(() => res.status(200).json({ message: 'Please check your email' }))
     .catch((error) => {
+      if (error.code === 'auth/user-not-found') {
+        return res.status(404).json({ message: 'User not found' })
+      }
+
       functions.logger.error('Reset password', error)
-      res.status(500).json({ ...error })
+      return res.status(500).json({ ...error })
     })
 }
 

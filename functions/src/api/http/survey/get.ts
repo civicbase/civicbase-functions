@@ -1,7 +1,6 @@
 import * as functions from 'firebase-functions'
 import { Request, Response } from 'express'
 import { db } from '../../../config/firebase'
-import { getIp } from '../../../utils/ip'
 
 export const getSurvey = (req: Request, res: Response) => {
   const { surveyId } = req.params
@@ -13,8 +12,6 @@ export const getSurvey = (req: Request, res: Response) => {
         const survey: any = doc.data() as any
 
         req.params.status = survey.status
-
-        getIp(req, 'access')
 
         res.status(200).json({ ...survey, id: doc.id })
       } else {

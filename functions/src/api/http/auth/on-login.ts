@@ -27,7 +27,18 @@ const loginFn = (req: Request, res: Response) => {
         .then((token: string) => {
           db.doc(`/users/${uid}`)
             .get()
-            .then((doc) => res.status(200).json({ user: doc.data(), token }))
+            .then((doc) => {
+              res.cookie('__civicbase_auth_token__', token, {
+                maxAge: expiresIn,
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                path: '/',
+                sameSite: 'lax',
+                // TODO: LAX
+              })
+
+              return res.status(200).json({ user: doc.data(), token })
+            })
         })
         .catch((error) => {
           functions.logger.error('Unauthorized request', error)
