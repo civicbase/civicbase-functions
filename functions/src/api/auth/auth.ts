@@ -1,8 +1,8 @@
 import { onRequest } from 'firebase-functions/v2/https';
 import express, { Request } from 'express';
 import cors from 'cors';
-// import cookieParser from 'cookie-parser';
-// import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 // import { credential } from 'firebase-admin';
 // import login from './on-login';
 // import { corsOptions } from '../../config/cors';
@@ -24,8 +24,8 @@ const corsOptions = {
 };
 app.use(express.json());
 app.use(cors(corsOptions));
-// app.use(helmet());
-// app.use(cookieParser());
+app.use(helmet());
+app.use(cookieParser());
 // app.options('*', cors(corsOptions));
 
 // app.options('*', cors(corsOptions));
