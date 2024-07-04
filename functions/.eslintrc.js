@@ -26,6 +26,7 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'import'],
   rules: {
+    '@typescript-eslint/no-non-null-assertion': 'off',
     quotes: ['error', 'single'],
     'import/no-unresolved': 0,
   },
